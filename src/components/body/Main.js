@@ -11,7 +11,6 @@ class Main extends React.Component {
         this.getLinks = this.getLinks.bind(this);
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
-        this.addComment = this.addComment.bind(this);
     }
     render() {
         return (
@@ -44,17 +43,6 @@ class Main extends React.Component {
     delete(id) {
         fetch("api/delete/" + id, {
             method: "delete"
-        }).then((response) => {
-            if (!response.ok) throw Error(response.statusText);
-            return response.json();
-        }).then((data) => {
-            return data;
-        });
-    }
-    addComment(comment) {
-        fetch("api/comment/", {
-            method: "post",
-            body: comment
         }).then((response) => {
             if (!response.ok) throw Error(response.statusText);
             return response.json();
