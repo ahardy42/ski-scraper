@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes/apiRoutes");
+const path = require("path");
 
 // Sets an initial port. heroku uses the process.env.PORT option
 const PORT = process.env.PORT || 8080;
@@ -13,8 +14,9 @@ const app = express();
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Make public a static folder
-app.use(express.static("public"));
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/public')));
 
 // set up routes
 app.use("/", routes);

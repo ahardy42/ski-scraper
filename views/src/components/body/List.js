@@ -5,9 +5,16 @@ class List extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            list: this.props.list
+            list: [{
+                img: "test",
+                heading: "test",
+                description: "test",
+                _id: "test",
+                datePublished: "test"
+            }]
         }
     }
+    
     render() {
         return (
             <ul className="list-group">

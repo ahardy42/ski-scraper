@@ -5,9 +5,6 @@ import './Main.css';
 class Main extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            links: [this.props.data]
-        }
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
     }
@@ -16,7 +13,7 @@ class Main extends React.Component {
             <main>
                 <div className="row my-5">
                     <div className="col">
-                        <List list={this.state.links} />
+                        <List list={this.props.scraper} />
                     </div>
                 </div>
             </main>
