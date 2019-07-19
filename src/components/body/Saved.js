@@ -33,3 +33,5 @@ class Saved extends React.Component {
         });
     }
 }
+
+export default Saved;
