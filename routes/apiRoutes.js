@@ -19,8 +19,16 @@ router.get("/api/scrape", (req, res) => {
         const $ = cheerio.load(response.data);
 
         const results = [];
-        const kiddos = $("article header a");
-        console.log(kiddos[0]);
+        $("article").each((i, article) => {
+            const data = {};
+            data.header = $(article).find(".entry-title").text();
+            data.href = $(article).find(".entry-title-link").attr("href");
+            data.img = $(article).find("img").attr("src");
+            data.description = blaaaa;
+            results.push(data);
+        });
+        res.json(results);
+        // console.log(results);
     });
 });
 
