@@ -8,26 +8,33 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.scraper = this.scraper.bind(this);
+    this.state = {
+      data: null
+    }
+  }
+  componentDidMount() {
+    this.scraper()
+    .then(res => this.setState({data: res}))
+    .catch(err => console.log(err));
+  }
+  scraper = async () => {
+    // fetch links using an api call
+    const response = await fetch("/api/scrape");
+    const body = await response.json();
+
+    if (response.status !== 200) {
+      throw Error(body.message) 
+    }
+    return body;
   }
   render() {
     return (
       <div className="App">
         <Header />
-        <Main scraper={this.scraper}/>
-        {/* <Footer /> */}
+        <Main scraper={this.state.data}/>
       </div>
     );
   }
-  scraper() {
-    // fetch links using an api call
-    fetch("/api/scrape").then(response => {
-      if (!response.ok) {throw Error(response.statusText)};
-      return response.json();
-    }).then(data => {
-      return data;
-    });
-  }
-
 }
 
 export default App;

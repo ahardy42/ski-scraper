@@ -10,9 +10,9 @@ class List extends React.Component {
     }
     render() {
         return (
-            <ul class="list-group">
+            <ul className="list-group">
                 {this.state.list.map(
-                    card => <Card img={card.img} heading={card.heading} description={card.description} key={card._id}/>
+                    card => <Card img={card.img} heading={card.heading} description={card.description} key={card._id} published={card.datePublished}/>
                 )}
             </ul>
         );

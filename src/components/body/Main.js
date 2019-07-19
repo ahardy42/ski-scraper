@@ -6,28 +6,21 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            links: []
+            links: [this.props.data]
         }
-        this.getLinks = this.getLinks.bind(this);
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
     }
     render() {
         return (
             <main>
-                <div class="row my-5">
-                    <div class="col">
+                <div className="row my-5">
+                    <div className="col">
                         <List list={this.state.links} />
                     </div>
                 </div>
             </main>
         );
-    }
-    componentDidMount() {
-        this.getLinks();
-    }
-    getLinks() {
-        this.setState({links: this.props.scraper()})
     }
     save(id, body) {
         fetch("api/save/"+id, {

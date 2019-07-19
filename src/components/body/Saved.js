@@ -13,8 +13,8 @@ class Saved extends React.Component {
     render() {
         return (
             <main>
-                <div class="row my-5">
-                    <div class="col">
+                <div className="row my-5">
+                    <div className="col">
                         <List list={this.state.saved} />
                     </div>
                 </div>
