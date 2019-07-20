@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require("path");
 const axios = require("axios");
-const db = require("./models");
+// const db = require("./models");
 const cheerio = require("cheerio");
 
 // send the homepage
@@ -35,7 +35,6 @@ router.get("/api/scrape", (req, res) => {
             results.push(data);
         });
         res.json(results);
-        
     });
 });
 

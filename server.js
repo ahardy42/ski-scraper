@@ -6,7 +6,7 @@ const path = require("path");
 
 // Sets an initial port. heroku uses the process.env.PORT option
 const PORT = process.env.PORT || 8080;
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/personal";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/skiScraper";
 
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/public')));
+app.use(express.static(path.join(__dirname, 'views')));
 
 // set up routes
 app.use("/", routes);

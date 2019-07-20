@@ -13,19 +13,19 @@ class App extends React.Component {
     }
   }
   componentDidMount() {
-    this.scraper()
-    .then(res => this.setState({data: res}))
-    .catch(err => console.log(err));
+    this.setState({
+      data: this.scraper()
+      .then(response => JSON.stringify(response))
+    });
   }
   scraper = async () => {
     // fetch links using an api call
     const response = await fetch("/api/scrape");
     const body = await response.json();
-
     if (response.status !== 200) {
       throw Error(body.message) 
     }
-    return body;
+    return response;
   }
   render() {
     return (
