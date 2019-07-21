@@ -80,13 +80,8 @@ class App extends React.Component {
       return response.json();
     })
     .then(json => {
-      console.log(json);
       let id = json._id;
-      console.log(this.state.saved);
-      let newSaved = this.state.saved.push(json);
       let newArticles = this.state.articles.filter(article => article._id !== id);
-      console.log("newSaved", newSaved);
-      console.log("newArticles", newArticles);
       this.setState({
         articles: newArticles
       });
@@ -103,7 +98,11 @@ class App extends React.Component {
       return response.json();
     })
     .then(json => {
-      return json;
+      let id = json._id;
+      let newSaved = this.state.saved.filter(article => article._id !== id);
+      this.setState({
+        saved: newSaved
+      });
     })
     .catch(error => {
       throw new Error("the error is " + error);
