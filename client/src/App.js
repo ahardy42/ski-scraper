@@ -1,31 +1,49 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import Main from './components/Main';
-// import Saved from './components/Saved';
+import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Saved from './components/Saved';
 import './App.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      articles: []
+      articles: [],
+      saved: []
     }
     this.scrapeSite = this.scrapeSite.bind(this);
     this.saveArticle = this.saveArticle.bind(this);
     this.deleteArticle = this.deleteArticle.bind(this);
     this.getSaved = this.getSaved.bind(this);
     this.showArticles = this.showArticles.bind(this);
+    this.mainPage = this.mainPage.bind(this);
+    this.savedPage = this.savedPage.bind(this);
   }
   componentDidMount() {
     this.scrapeSite();
     this.showArticles();
+    this.getSaved();
   }
   render() {
     return (
-      <>
+      <Router>
         <Navbar />
-        <Main articles={this.state.articles} />
-      </>
+        <Switch>
+          <Route exact path="/" render={this.mainPage} />
+          <Route exact path="/saved" render={this.savedPage} />
+        </Switch>
+      </Router>
+    );
+  }
+  mainPage(props) {
+    return(
+      <Main articles={this.state.articles} save={this.saveArticle} {...props} />
+    );
+  }
+  savedPage(props) {
+    return(
+      <Saved saved={this.state.saved} delete={this.deleteArticle} {...props} />
     );
   }
   scrapeSite() {
@@ -84,7 +102,9 @@ class App extends React.Component {
       return response.json();
     })
     .then(json => {
-      return json;
+      this.setState({
+        saved: json
+      });
     })
     .catch(error => {
       throw new Error("the error is " + error);

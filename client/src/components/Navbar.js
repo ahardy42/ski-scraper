@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 class Navbar extends React.Component {
     render() {
@@ -6,12 +7,12 @@ class Navbar extends React.Component {
             <nav className="navbar navbar-light bg-light mb-4">
                 <span className="navbar-brand mb-0 h1">The Wax Scraper | Nordic Skiing News</span>
                 <div className="d-flex">
-                    <ul class="nav justify-content-end">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/">Home</a>
+                    <ul className="nav justify-content-end">
+                        <li className="nav-item">
+                            <NavLink exact to="/" className="nav-link" activeClassName="nav-link active">Home</NavLink>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/saved">Saved Articles</a>
+                        <li className="nav-item">
+                            <NavLink exact to="/saved" className="nav-link" activeClassName="nav-link active">Saved Articles</NavLink>
                         </li>
                     </ul>
                 </div>
