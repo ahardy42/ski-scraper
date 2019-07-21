@@ -3,7 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes/apiRoutes");
 
-
 // Sets an initial port. heroku uses the process.env.PORT option
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/skiScraper";

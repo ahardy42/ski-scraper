@@ -32,6 +32,14 @@ router.get("/api/scrape", (req, res) => {
     });
 });
 
+// show all articles in db
+router.get("/api/articles", (req, res) => {
+    db.Article.find({}, (err, articles) => {
+        if (err) throw new Error(err);
+        res.json(articles);
+    });
+})
+
 // save an article
 router.put("/api/saved/:id", (req, res) => {
     let id = req.params.id;

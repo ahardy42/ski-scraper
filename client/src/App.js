@@ -1,26 +1,95 @@
 import React from 'react';
-import logo from './logo.svg';
+import Navbar from './components/Navbar';
+import Main from './components/Main';
+// import Saved from './components/Saved';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      articles: []
+    }
+    this.scrapeSite = this.scrapeSite.bind(this);
+    this.saveArticle = this.saveArticle.bind(this);
+    this.deleteArticle = this.deleteArticle.bind(this);
+    this.getSaved = this.getSaved.bind(this);
+    this.showArticles = this.showArticles.bind(this);
+  }
+  componentDidMount() {
+    this.scrapeSite();
+    this.showArticles();
+  }
+  render() {
+    return (
+      <>
+        <Navbar />
+        <Main articles={this.state.articles} />
+      </>
+    );
+  }
+  scrapeSite() {
+    fetch("/api/scrape")
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      console.log(json);
+    })
+    .catch(error => {
+      throw new Error("the error is " + error);
+    });
+  }
+  showArticles() {
+    fetch("/api/articles")
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      this.setState({
+        articles: json
+      });
+    })
+    .catch(error => {
+      throw new Error("the error is " + error);
+    });
+  }
+  saveArticle(id) {
+    fetch(`/api/saved/${id}`)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      return json;
+    })
+    .catch(error => {
+      throw new Error("the error is " + error);
+    });
+  }
+  deleteArticle(id) {
+    fetch(`/api/saved/${id}`)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      return json;
+    })
+    .catch(error => {
+      throw new Error("the error is " + error);
+    });
+  }
+  getSaved() {
+    fetch(`/api/saved/`)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      return json;
+    })
+    .catch(error => {
+      throw new Error("the error is " + error);
+    });
+  }
 }
 
 export default App;
