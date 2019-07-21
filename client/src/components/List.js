@@ -7,12 +7,15 @@ class List extends React.Component {
         this.handleDelete = this.handleDelete.bind(this);
     }
     handleDelete() {
-        let id = this.props.article._id;
-        this.props.save(id);
+        // let id = this.props.article._id;
+        // this.props.delete(id);
+        console.log("delete button pressed");
+        console.log(this.props);
     }
     handleSave() {
         let id = this.props.article._id;
-        this.props.delete(id);
+        this.props.save(id);
+        console.log("save button pressed");
     }
     render() {
         let article = this.props.article;

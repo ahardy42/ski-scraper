@@ -7,7 +7,7 @@ class Saved extends React.Component {
             <div className="container">
                 <ul className="list-unstyled">
                     {this.props.saved.map(article => {
-                        return <List article={article} key={article._id} />
+                        return <List article={article} key={article._id} save={this.props.save} delete={this.props.delete}/>
                     })}
                 </ul>
             </div>

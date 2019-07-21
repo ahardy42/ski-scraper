@@ -32,9 +32,9 @@ router.get("/api/scrape", (req, res) => {
     });
 });
 
-// show all articles in db
+// show all articles in db that aren't saved
 router.get("/api/articles", (req, res) => {
-    db.Article.find({}, (err, articles) => {
+    db.Article.find({isSaved: false}, (err, articles) => {
         if (err) throw new Error(err);
         res.json(articles);
     });
