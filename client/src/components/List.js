@@ -1,8 +1,29 @@
 import React from 'react';
 
 class List extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleSave = this.handleSave.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+    }
+    handleDelete() {
+        let id = this.props.article._id;
+        this.props.save(id);
+    }
+    handleSave() {
+        let id = this.props.article._id;
+        this.props.delete(id);
+    }
     render() {
         let article = this.props.article;
+        let button, comment;
+        if (article.isSaved) {
+            button = <button type="button" className="btn btn-success mx-2" onClick={this.handleDelete}>Delete</button>;
+            comment = <button type="button" className="btn btn-success mx-2">Add Comment</button>;
+        } else {
+            button = <button type="button" className="btn btn-success mx-2" onClick={this.handleSave}>Save</button>;
+            comment = <button type="button" className="btn btn-success invisible mx-2">Add Comment</button>;
+        }
         return (
             <li className="list-group-item" id={article._id}>
                 <div className="row">
@@ -19,6 +40,8 @@ class List extends React.Component {
                                 </a>
                                 <p className="card-text">{article.description}</p>
                                 <p className="card-text"><small className="text-muted">{article.published}</small></p>
+                                {button}
+                                {comment}
                             </div>
                         </div>
                     </div>
