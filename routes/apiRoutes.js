@@ -35,12 +35,16 @@ router.get("/api/scrape", (req, res) => {
 // save an article
 router.put("/api/saved/:id", (req, res) => {
     let id = req.params.id;
-    db.Article.updateOne({_id: id}, {isSaved: true});
+    db.Article.findOneAndUpdate({_id: id}, {isSaved: true}, {new: true}, (err, article) => {
+        if (err) throw new Error(err);
+        res.json(article);
+    });
 })
 
 // get saved articles from the database and show them on the page, along with comments
 router.get("/api/saved", (req, res) => {
-    db.Article.find({isSaved: true}, articles => {
+    db.Article.find({isSaved: true}, (err, articles) => {
+        if (err) throw new Error(err);
         res.json(articles);
     });
 });
@@ -48,20 +52,29 @@ router.get("/api/saved", (req, res) => {
 // delete a saved article and associated comments
 router.delete("/api/saved/:id", (req, res) => {
     let id = req.params.id;
-    db.Article.findOneAndDelete({_id: id}, article => {
-        let commentId = article.comment;
-        db.Comment.deleteOne({_id: commentId});
+    db.Article.findOneAndDelete({_id: id}, (err, article) => {
+        if (err) throw new Error(err);
+        if (article.comment) {
+            let commentId = article.comment;
+            return db.Comment.findOneAndDelete({_id: commentId}, (err, comment));
+        } else {
+            res.json(article);
+        }
     });
 });
 
-// add a comment to an article and re-render based on ONLY THE COMMENT (this is hooked to react afterall)
+// add a comment to an article
 router.put("/api/comment/:id", (req, res) => {
     const id = req.params.id; // article ID that the comment is being referenced to
+    console.log(req.body);
     db.Comment.create(req.body)
     .then(comment => {
-        return db.Article.findOneAndUpdate({_id: id}, {comment: comment._id}, {new: true});
+        let article = db.Article.findOneAndUpdate({_id: id}, {comment: comment._id}, {new: true}).populate("comment");
+        console.log(article);
+        return article;
     })
     .then(article => {
+        console.log(article);
         res.json(article);
     })
     .catch(err => {
@@ -69,20 +82,8 @@ router.put("/api/comment/:id", (req, res) => {
     });
 });
 
-// delete a comment and update article
-router.delete("/api/comment/:id", (req, res) => {
-    let id = req.params.id;
-    db.findOneAndDelete({_id: id}, comment => {
-        let commentId = comment._id;
-        return db.Article.findOneAndUpdate({comment: commentId}, {comment: null}, {new: true});
-    })
-    .then(article => {
-        res.json(article);
-    })
-    .catch(err => {
-        res.json(err);
-    });
-});
+// delete a comment and update article id is the article id!
+// coming soon
 
 const scraperHelper = ($, article) => {
     let fullPara = $(article).find(".entry-content>p").text();
