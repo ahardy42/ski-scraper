@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 class Navbar extends React.Component {
     render() {
         return (
-            <nav className="navbar navbar-light bg-light mb-4">
+            <nav className="navbar navbar-light bg-white">
                 <span className="navbar-brand mb-0 h1">The Wax Scraper | Nordic Skiing News</span>
                 <div className="d-flex">
                     <ul className="nav justify-content-end">

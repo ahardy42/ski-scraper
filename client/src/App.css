@@ -1,0 +1,23 @@
+.nav {
+    padding-bottom: 20px;
+    font-weight: bold;
+}
+.container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.navbar {
+    opacity: 0.9;
+}
+#root {
+    background-image: url("./background.jpg");
+    height: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.list-unstyled {
+    opacity: 0.9;
+}
