@@ -51,10 +51,14 @@ router.put("/api/saved/:id", (req, res) => {
 
 // get saved articles from the database and show them on the page, along with comments
 router.get("/api/saved", (req, res) => {
-    db.Article.find({isSaved: true}, (err, articles) => {
-        if (err) throw new Error(err);
+    db.Article.find({isSaved: true})
+    .populate("comment")
+    .then((articles) => {
         res.json(articles);
-    });
+    })
+    .catch(err => {
+        res.json(err);
+    })
 });
 
 // delete a saved article and associated comments
@@ -64,10 +68,9 @@ router.delete("/api/saved/:id", (req, res) => {
         if (err) throw new Error(err);
         if (article.comment) {
             let commentId = article.comment;
-            return db.Comment.findOneAndDelete({_id: commentId}, (err, comment));
-        } else {
-            res.json(article);
+            db.Comment.findOneAndDelete({_id: commentId});
         }
+        res.json(article);
     });
 });
 
@@ -78,11 +81,11 @@ router.put("/api/comment/:id", (req, res) => {
     db.Comment.create(req.body)
     .then(comment => {
         let article = db.Article.findOneAndUpdate({_id: id}, {comment: comment._id}, {new: true}).populate("comment");
-        console.log(article);
+        console.log("article returned at 84 is", article);
         return article;
     })
     .then(article => {
-        console.log(article);
+        console.log("article returned at 88 is", article);
         res.json(article);
     })
     .catch(err => {

@@ -1,10 +1,18 @@
 import React from 'react';
+import Comments from './Comments';
+import Buttons from './Buttons';
 
 class List extends React.Component {
     constructor(props) {
         super(props);
         this.handleSave = this.handleSave.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleCommentAdd = this.handleCommentAdd.bind(this);
+        this.handleCommentChange = this.handleCommentChange.bind(this);
+        this.state = {
+            article: this.props.article,
+            input: ""
+        }
     }
     handleDelete() {
         let id = this.props.article._id;
@@ -14,16 +22,27 @@ class List extends React.Component {
         let id = this.props.article._id;
         this.props.save(id);
     }
+    handleCommentChange(event) {
+        this.setState({
+            input: event.target.value
+        });
+    }
+    handleCommentAdd() {
+        let id = this.props.article._id;
+        let body = {body: this.state.input};
+        console.log(id, body);
+        this.props.submit(id, body)
+        .then(article => {
+            console.log(article);
+            let savedArticle = article;
+            savedArticle.comment.isSaved = true;
+            this.setState({
+                article: savedArticle
+            });
+        });
+    }
     render() {
         let article = this.props.article;
-        let button, comment;
-        if (article.isSaved) {
-            button = <button type="button" className="btn btn-success mx-2" onClick={this.handleDelete}>Delete</button>;
-            comment = <button type="button" className="btn btn-success mx-2">Add Comment</button>;
-        } else {
-            button = <button type="button" className="btn btn-success mx-2" onClick={this.handleSave}>Save</button>;
-            comment = <button type="button" className="btn btn-success invisible mx-2">Add Comment</button>;
-        }
         return (
             <li className="list-group-item" id={article._id}>
                 <div className="row">
@@ -40,8 +59,8 @@ class List extends React.Component {
                                 </a>
                                 <p className="card-text">{article.description}</p>
                                 <p className="card-text"><small className="text-muted">{article.published}</small></p>
-                                {button}
-                                {comment}
+                                <Buttons handleDelete={this.handleDelete} handleCommentAdd={this.handleCommentAdd} handleSave={this.handleSave} isSaved={this.state.article.isSaved} comment={this.state.article.comment}/>
+                                <Comments comment={this.state.article.comment ? this.state.article.comment : null} isSaved={this.state.article.isSaved} handleChange={this.handleCommentChange}/>
                             </div>
                         </div>
                     </div>

@@ -81,9 +81,11 @@ class App extends React.Component {
     })
     .then(json => {
       let id = json._id;
+      let currSate = this.state.saved;
       let newArticles = this.state.articles.filter(article => article._id !== id);
       this.setState({
-        articles: newArticles
+        articles: newArticles,
+        saved: [...currSate, json]
       });
     })
     .catch(error => {
