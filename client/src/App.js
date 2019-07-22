@@ -38,12 +38,12 @@ class App extends React.Component {
   }
   mainPage(props) {
     return(
-      <Main articles={this.state.articles} save={this.saveArticle} {...props} />
+      <Main articles={this.state.articles} save={this.saveArticle} delete={this.deleteArticle} {...props} />
     );
   }
   savedPage(props) {
     return(
-      <Saved saved={this.state.saved} delete={this.deleteArticle} {...props} />
+      <Saved saved={this.state.saved}  save={this.saveArticle} delete={this.deleteArticle} {...props} />
     );
   }
   scrapeSite() {
@@ -73,24 +73,38 @@ class App extends React.Component {
     });
   }
   saveArticle(id) {
-    fetch(`/api/saved/${id}`)
+    fetch(`/api/saved/${id}`, {
+      method: "PUT"
+    })
     .then(response => {
       return response.json();
     })
     .then(json => {
-      return json;
+      let id = json._id;
+      let currSate = this.state.saved;
+      let newArticles = this.state.articles.filter(article => article._id !== id);
+      this.setState({
+        articles: newArticles,
+        saved: [...currSate, json]
+      });
     })
     .catch(error => {
       throw new Error("the error is " + error);
     });
   }
   deleteArticle(id) {
-    fetch(`/api/saved/${id}`)
+    fetch(`/api/saved/${id}`, {
+      method: "DELETE"
+    })
     .then(response => {
       return response.json();
     })
     .then(json => {
-      return json;
+      let id = json._id;
+      let newSaved = this.state.saved.filter(article => article._id !== id);
+      this.setState({
+        saved: newSaved
+      });
     })
     .catch(error => {
       throw new Error("the error is " + error);
