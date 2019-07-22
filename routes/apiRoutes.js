@@ -5,14 +5,7 @@ const axios = require("axios");
 const db = require("../models");
 const cheerio = require("cheerio");
 
-// send the homepage
-
-// router.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, '../views/public/index.html'));
-// })
-
 // set up some api routes for the front end
-
 router.get("/api/scrape", (req, res) => {
     axios.get("https://fasterskier.com/").then(response => {
         const $ = cheerio.load(response.data);
@@ -111,6 +104,11 @@ router.delete("/api/comment/:id", (req, res) => {
     .catch(err => {
         res.json(err);
     });
+});
+
+// send the homepage if no api routes are being asked for (for production build)
+router.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
 })
 
 const scraperHelper = ($, article) => {
