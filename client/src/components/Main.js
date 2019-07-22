@@ -10,7 +10,7 @@ class Main extends React.Component {
             <div className="container">
                 <ul className="list-unstyled">
                     {this.props.articles.map(article => {
-                        return <List article={article} key={article._id} save={this.props.save} delete={this.props.delete}/>
+                        return <List article={article} key={article._id} save={this.props.save} delete={this.props.delete} />
                     })}
                 </ul>
             </div>
