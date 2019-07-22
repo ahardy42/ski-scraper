@@ -10,7 +10,6 @@ class List extends React.Component {
         this.handleCommentAdd = this.handleCommentAdd.bind(this);
         this.handleCommentChange = this.handleCommentChange.bind(this);
         this.state = {
-            article: this.props.article,
             input: ""
         }
     }
@@ -34,11 +33,7 @@ class List extends React.Component {
         this.props.submit(id, body)
         .then(article => {
             console.log(article);
-            let savedArticle = article;
-            savedArticle.comment.isSaved = true;
-            this.setState({
-                article: savedArticle
-            });
+            this.props.getSaved();
         });
     }
     render() {
@@ -59,8 +54,8 @@ class List extends React.Component {
                                 </a>
                                 <p className="card-text">{article.description}</p>
                                 <p className="card-text"><small className="text-muted">{article.published}</small></p>
-                                <Buttons handleDelete={this.handleDelete} handleCommentAdd={this.handleCommentAdd} handleSave={this.handleSave} isSaved={this.state.article.isSaved} comment={this.state.article.comment}/>
-                                <Comments comment={this.state.article.comment ? this.state.article.comment : null} isSaved={this.state.article.isSaved} handleChange={this.handleCommentChange}/>
+                                <Buttons handleDelete={this.handleDelete} handleCommentAdd={this.handleCommentAdd} handleSave={this.handleSave} isSaved={this.props.article.isSaved} comment={this.props.article.comment}/>
+                                <Comments comments={this.props.article.comments} isSaved={this.props.article.isSaved} handleChange={this.handleCommentChange} commentDelete={this.props.commentDelete} getSaved={this.props.getSaved}/>
                             </div>
                         </div>
                     </div>

@@ -22,8 +22,6 @@ class App extends React.Component {
   }
   componentDidMount() {
     this.scrapeSite();
-    this.showArticles();
-    this.getSaved();
   }
   render() {
     return (
@@ -38,12 +36,12 @@ class App extends React.Component {
   }
   mainPage(props) {
     return(
-      <Main articles={this.state.articles} save={this.saveArticle} delete={this.deleteArticle} {...props} />
+      <Main articles={this.state.articles} save={this.saveArticle} delete={this.deleteArticle} showArticles={this.showArticles} {...props} />
     );
   }
   savedPage(props) {
     return(
-      <Saved saved={this.state.saved}  save={this.saveArticle} delete={this.deleteArticle} {...props} />
+      <Saved saved={this.state.saved} save={this.saveArticle} delete={this.deleteArticle} getSaved={this.getSaved} {...props} />
     );
   }
   scrapeSite() {
@@ -52,7 +50,7 @@ class App extends React.Component {
       return response.json();
     })
     .then(json => {
-      console.log(json);
+      this.showArticles();
     })
     .catch(error => {
       throw new Error("the error is " + error);
@@ -67,6 +65,7 @@ class App extends React.Component {
       this.setState({
         articles: json
       });
+      console.log("app setState has run");
     })
     .catch(error => {
       throw new Error("the error is " + error);
@@ -87,6 +86,7 @@ class App extends React.Component {
         articles: newArticles,
         saved: [...currSate, json]
       });
+      console.log("app setState has run");
     })
     .catch(error => {
       throw new Error("the error is " + error);
@@ -105,6 +105,7 @@ class App extends React.Component {
       this.setState({
         saved: newSaved
       });
+      console.log("app setState has run");
     })
     .catch(error => {
       throw new Error("the error is " + error);
@@ -119,6 +120,7 @@ class App extends React.Component {
       this.setState({
         saved: json
       });
+      console.log("app setState has run");
     })
     .catch(error => {
       throw new Error("the error is " + error);

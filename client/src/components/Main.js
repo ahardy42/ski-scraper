@@ -2,6 +2,9 @@ import React from 'react';
 import List from './List';
 
 class Main extends React.Component {
+    componentDidMount() {
+        this.props.showArticles();
+    }
     render() {
         return (
             <div className="container">
