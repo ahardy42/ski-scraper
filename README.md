@@ -30,6 +30,13 @@ The API routes are all handled using express.js and the initial scrape is handle
 
 this app is deployed using heroku and is hosted at: https://wax-scraper.herokuapp.com/ 
 
+## screen shots
+
+![screen shot](https://ahardy42.s3.us-east-2.amazonaws.com/project_screenShots/wax_scraper.png)
+
+screen shot of page
+
+
 ## How to run on your machine
 
 1. clone this repo
