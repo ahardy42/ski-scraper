@@ -1,6 +1,7 @@
 import React from 'react';
-import Comments from './Comments';
+import CommentForm from './CommentForm';
 import Buttons from './Buttons';
+import CommentList from './CommentList';
 
 class List extends React.Component {
     constructor(props) {
@@ -29,12 +30,16 @@ class List extends React.Component {
     handleCommentAdd() {
         let id = this.props.article._id;
         let body = {body: this.state.input};
-        console.log(id, body);
-        this.props.submit(id, body)
-        .then(article => {
-            console.log(article);
+        this.props.submit(id, body);
+        this.setState({
+            input : ""
+        }, () => {
             this.props.getSaved();
         });
+    }
+    handleCommentDelete() {
+        this.props.commentDelete();
+        this.props.getSaved();
     }
     render() {
         let article = this.props.article;
@@ -42,20 +47,25 @@ class List extends React.Component {
             <li className="list-group-item" id={article._id}>
                 <div className="row">
                     <div className="col-3">
-                        <a href={article.href} target="_blank">
-                            <img className="" src={article.img} alt="Card cap" />
+                        <a href={article.href} target="_blank" rel="noopener noreferrer">
+                            <img className="card-imagew" src={article.img} alt="Card cap" />
                         </a>
                     </div>
                     <div className="col-9">
                         <div className="card mb-3">
                             <div className="card-body">
-                                <a href={article.href} target="_blank">
+                                <a href={article.href} target="_blank" rel="noopener noreferrer">
                                     <h5 className="card-title">{article.header}</h5>
                                 </a>
                                 <p className="card-text">{article.description}</p>
                                 <p className="card-text"><small className="text-muted">{article.published}</small></p>
-                                <Buttons handleDelete={this.handleDelete} handleCommentAdd={this.handleCommentAdd} handleSave={this.handleSave} isSaved={this.props.article.isSaved} comment={this.props.article.comment}/>
-                                <Comments comments={this.props.article.comments} isSaved={this.props.article.isSaved} handleChange={this.handleCommentChange} commentDelete={this.props.commentDelete} getSaved={this.props.getSaved}/>
+                                <Buttons isSaved={this.props.isSaved} handleDelete={this.handleDelete} handleCommentAdd={this.handleCommentAdd} handleSave={this.handleSave} comment={this.props.article.comment}/>
+                                {this.props.isSaved ? (
+                                    <>
+                                        <CommentList comments={this.props.article.comments} commentDelete={this.props.commentDelete} />
+                                        <CommentForm input={this.state.input} handleChange={this.handleCommentChange}/>
+                                    </>
+                                ) : null}
                             </div>
                         </div>
                     </div>

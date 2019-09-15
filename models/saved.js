@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const ArticleSchema = new Schema({
+const SavedSchema = new Schema({
     header: {
         type: String,
         required: true
@@ -24,16 +24,18 @@ const ArticleSchema = new Schema({
         required: true,
         unique: true
     },
-    isSaved: {
-        type: Boolean,
-        default: false
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: "Comment"
+    }],
+    article: {
+        type: Schema.Types.ObjectId,
+        ref: "Article"
     }
-}, {
-    capped: {max : 20, autoIndexId : true} // creating a capped schema
 });
 
 // This creates our model from the above schema, using mongoose's model method
-var Article = mongoose.model("Article", ArticleSchema);
+var Saved = mongoose.model("Saved", SavedSchema);
 
 // Export the Article model
-module.exports = Article;
+module.exports = Saved;

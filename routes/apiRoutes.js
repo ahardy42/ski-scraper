@@ -17,34 +17,53 @@ router.get("/api/scrape", (req, res) => {
        // save new articles to the database, based on published date being unique
         db.Article.insertMany(results, {
             ordered: false
-        }).then((result) => {
-            res.json(result);
+        }).then((articles) => {
+            console.log(articles);
+            res.redirect("/api/articles");
         }).catch((err) => {
-            res.json(err);
+            console.log(err);
+            res.redirect("/api/articles");
         });
+    })
+    .catch(err => {
+        console.log(err);
     });
 });
 
-// show all articles in db that aren't saved
+// show all articles in db that aren't saved, sort by publish date
 router.get("/api/articles", (req, res) => {
-    db.Article.find({isSaved: false}, (err, articles) => {
+    db.Article.find().sort({published: -1}).exec((err, articles) => {
         if (err) throw new Error(err);
         res.json(articles);
     });
 })
 
 // save an article
-router.put("/api/saved/:id", (req, res) => {
+router.get("/api/saved/:id", (req, res) => {
     let id = req.params.id;
-    db.Article.findOneAndUpdate({_id: id}, {isSaved: true}, {new: true}, (err, article) => {
+    db.Article.findByIdAndUpdate(id, {isSaved : true}, (err, article) => {
         if (err) throw new Error(err);
-        res.json(article);
+        let clonedArticle = {
+            header : article.header,
+            href : article.href,
+            img : article.img,
+            description : article.description,
+            published : article.published,
+            article: id
+        };
+        db.Saved.create(clonedArticle)
+        .then(newArticle => {
+            res.json(newArticle);
+        })
+        .catch(err => {
+            res.json(err);
+        });
     });
 })
 
 // get saved articles from the database and show them on the page, along with comments
 router.get("/api/saved", (req, res) => {
-    db.Article.find({isSaved: true})
+    db.Saved.find()
     .populate("comments")
     .then((articles) => {
         res.json(articles);
@@ -57,16 +76,17 @@ router.get("/api/saved", (req, res) => {
 // delete a saved article and associated comments
 router.delete("/api/saved/:id", (req, res) => {
     let id = req.params.id;
-    db.Article.findOneAndDelete({_id: id}, (err, article) => {
+    db.Saved.findOneAndDelete({_id: id}, (err, article) => {
         if (err) throw new Error(err);
+        console.log(article.article);
+        db.Article.findByIdAndUpdate(article.article, {isSaved: false}).exec(); // find the corresponding article by its id ref and updated isSaved to false
         if (article.comments) {
-            console.log("there were comments", article.comments);
             let articleId = article._id;
-            console.log("this is the article id", articleId);
             db.Comment.deleteMany({article: articleId})
             .then(wtf => {
                 console.log(wtf);
-            });
+            })
+            .catch(err => console.log(err));
         }
         res.json(article);
     });
@@ -75,9 +95,11 @@ router.delete("/api/saved/:id", (req, res) => {
 // add a comment to an article
 router.put("/api/comment/:id", (req, res) => {
     const id = req.params.id; // article ID that the comment is being referenced to
-    db.Comment.create(req.body)
+    let {body} = req;
+    body.article = id;
+    db.Comment.create(body)
     .then(comment => {
-        let article = db.Article.findOneAndUpdate({_id: id}, { $push: {comments: comment._id}}, {new: true}).populate("comments");
+        let article = db.Saved.findOneAndUpdate({_id: id}, { $push: {comments: comment._id}}, {new: true}).populate("comments");
         return article;
     })
     .then(article => {
@@ -88,7 +110,7 @@ router.put("/api/comment/:id", (req, res) => {
     });
 });
 
-// delete a comment and update. article id is the comment id!
+// delete a comment and update. id is the comment id!
 router.delete("/api/comment/:id", (req, res) => {
     // first delete the comment from the comment db
     let id = req.params.id;
@@ -106,7 +128,7 @@ router.delete("/api/comment/:id", (req, res) => {
     });
 });
 
-// send the homepage if no api routes are being asked for (for production build)
+// send the homepage if no api routes are being called (for production build)
 router.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 })
