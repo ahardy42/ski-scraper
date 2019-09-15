@@ -23,6 +23,10 @@ const ArticleSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    isSaved: {
+        type: Boolean,
+        default: false
     }
 }, {
     capped: {max : 20, autoIndexId : true} // creating a capped schema

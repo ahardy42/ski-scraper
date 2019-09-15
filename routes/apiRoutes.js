@@ -41,14 +41,15 @@ router.get("/api/articles", (req, res) => {
 // save an article
 router.get("/api/saved/:id", (req, res) => {
     let id = req.params.id;
-    db.Article.findById(id, (err, article) => {
+    db.Article.findByIdAndUpdate(id, {isSaved : true}, (err, article) => {
         if (err) throw new Error(err);
         let clonedArticle = {
             header : article.header,
             href : article.href,
             img : article.img,
             description : article.description,
-            published : article.published
+            published : article.published,
+            article: id
         };
         db.Saved.create(clonedArticle)
         .then(newArticle => {
@@ -77,6 +78,8 @@ router.delete("/api/saved/:id", (req, res) => {
     let id = req.params.id;
     db.Saved.findOneAndDelete({_id: id}, (err, article) => {
         if (err) throw new Error(err);
+        console.log(article.article);
+        db.Article.findByIdAndUpdate(article.article, {isSaved: false}).exec(); // find the corresponding article by its id ref and updated isSaved to false
         if (article.comments) {
             let articleId = article._id;
             db.Comment.deleteMany({article: articleId})

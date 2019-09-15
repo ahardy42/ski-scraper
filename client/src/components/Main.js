@@ -4,15 +4,13 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSnowflake} from '@fortawesome/free-solid-svg-icons';
 
 class Main extends React.Component {
-    componentDidMount() {
-        this.props.scrape();
-    }
     renderList = () => {
+        let filtered = this.props.articles.filter(article => !article.isSaved);
         return(
-            this.props.articles.map(article => {
+            filtered.map(article => {
                 return <List isSaved={false} article={article} key={article._id} save={this.props.save} delete={this.props.delete} />
             })
-        );
+        );     
     }
     renderSpinner = () => {
         return (

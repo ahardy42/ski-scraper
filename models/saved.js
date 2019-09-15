@@ -27,7 +27,11 @@ const SavedSchema = new Schema({
     comments: [{
         type: Schema.Types.ObjectId,
         ref: "Comment"
-    }]
+    }],
+    article: {
+        type: Schema.Types.ObjectId,
+        ref: "Article"
+    }
 });
 
 // This creates our model from the above schema, using mongoose's model method
