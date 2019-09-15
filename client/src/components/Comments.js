@@ -6,7 +6,7 @@ class Comments extends React.Component {
         this.handleCommentDelete = this.handleCommentDelete.bind(this);
     }
     render() {
-        if (this.props.comments.length > 0) {
+        if (this.props.comments) {
             return (
                 <>
                     {this.props.comments.map(
@@ -23,23 +23,18 @@ class Comments extends React.Component {
                     </div>
                 </>
             );
-        } else if (this.props.isSaved) {
+        } else {
             return (
                 <div className="input-group my-2">
                     <textarea className="form-control" placeholder="Add your comment here!" aria-label="Add your comment here!" onChange={this.props.handleChange}></textarea>
                 </div>
             );
-        } else {
-            return null;
-        }
-        
+        } 
     }
     handleCommentDelete(event) {
-        console.log(event.target.id);
         let id = event.target.id;
         this.props.commentDelete(id)
         .then(response => {
-            console.log(response);
             this.props.getSaved();
         })
         .catch(err => {

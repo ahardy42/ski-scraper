@@ -20,28 +20,14 @@ class App extends React.Component {
     this.mainPage = this.mainPage.bind(this);
     this.savedPage = this.savedPage.bind(this);
   }
-  componentDidMount() {
-    this.scrapeSite();
-  }
-  render() {
-    return (
-      <Router>
-        <Navbar />
-        <Switch>
-          <Route exact path="/" render={this.mainPage} />
-          <Route exact path="/saved" render={this.savedPage} />
-        </Switch>
-      </Router>
-    );
-  }
   mainPage(props) {
     return(
-      <Main articles={this.state.articles} save={this.saveArticle} delete={this.deleteArticle} showArticles={this.showArticles} {...props} />
+      <Main scrape={this.scrapeSite} articles={this.state.articles} save={this.saveArticle} delete={this.deleteArticle} showArticles={this.showArticles} {...props} />
     );
   }
   savedPage(props) {
     return(
-      <Saved saved={this.state.saved} save={this.saveArticle} delete={this.deleteArticle} getSaved={this.getSaved} {...props} />
+      <Saved saved={this.state.saved} deleteArticle={this.deleteArticle} getSaved={this.getSaved} {...props} />
     );
   }
   scrapeSite() {
@@ -50,30 +36,20 @@ class App extends React.Component {
       return response.json();
     })
     .then(json => {
-      this.showArticles();
+      this.showArticles(json);
     })
     .catch(error => {
       throw new Error("the error is " + error);
     });
   }
-  showArticles() {
-    fetch("/api/articles")
-    .then(response => {
-      return response.json();
-    })
-    .then(json => {
-      this.setState({
-        articles: json
-      });
-      console.log("app setState has run");
-    })
-    .catch(error => {
-      throw new Error("the error is " + error);
+  showArticles(json) {
+    this.setState({
+      articles: json
     });
   }
   saveArticle(id) {
     fetch(`/api/saved/${id}`, {
-      method: "PUT"
+      method: "GET"
     })
     .then(response => {
       return response.json();
@@ -86,7 +62,6 @@ class App extends React.Component {
         articles: newArticles,
         saved: [...currSate, json]
       });
-      console.log("app setState has run");
     })
     .catch(error => {
       throw new Error("the error is " + error);
@@ -105,7 +80,6 @@ class App extends React.Component {
       this.setState({
         saved: newSaved
       });
-      console.log("app setState has run");
     })
     .catch(error => {
       throw new Error("the error is " + error);
@@ -120,11 +94,21 @@ class App extends React.Component {
       this.setState({
         saved: json
       });
-      console.log("app setState has run");
     })
     .catch(error => {
       throw new Error("the error is " + error);
     });
+  }
+  render() {
+    return (
+      <Router>
+        <Navbar />
+        <Switch>
+          <Route exact path="/" render={this.mainPage} />
+          <Route exact path="/saved" render={this.savedPage} />
+        </Switch>
+      </Router>
+    );
   }
 }
 
